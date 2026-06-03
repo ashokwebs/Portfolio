@@ -1,16 +1,50 @@
 import { useState } from 'react';
 import { personal } from '../data/content';
 
+const initialFormData = {
+  name: '',
+  email: '',
+  message: '',
+  'bot-field': '',
+};
+
+function encodeForm(data) {
+  return new URLSearchParams(data).toString();
+}
+
 export default function ContactPage() {
+  const [formData, setFormData] = useState(initialFormData);
   const [formState, setFormState] = useState('idle'); // idle, sending, sent
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formState === 'sending') return;
+
     setFormState('sending');
-    setTimeout(() => {
+
+    try {
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encodeForm({ 'form-name': 'contact', ...formData }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Netlify form submission failed.');
+      }
+
       setFormState('sent');
+      setFormData(initialFormData);
       setTimeout(() => setFormState('idle'), 3000);
-    }, 1500);
+    } catch {
+      setFormState('error');
+      setTimeout(() => setFormState('idle'), 4000);
+    }
   };
 
   return (
@@ -60,7 +94,14 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <form className="card" style={{ padding: '32px' }} onSubmit={handleSubmit}>
+        <form className="card" style={{ padding: '32px' }} onSubmit={handleSubmit} name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="contact" />
+          <div style={{ display: 'none' }}>
+            <label>
+              Do not fill this field if you are human.
+              <input name="bot-field" value={formData['bot-field']} onChange={handleChange} />
+            </label>
+          </div>
           <div style={{ marginBottom: '24px' }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ width: '6px', height: '6px', background: 'var(--accent)', borderRadius: '50%' }} />
@@ -69,22 +110,32 @@ export default function ContactPage() {
             
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-ghost)', marginBottom: '8px', textTransform: 'uppercase' }}>Identification</label>
-              <input type="text" required placeholder="Name / Alias" style={{ width: '100%', padding: '12px 16px', background: 'var(--bg-deep)', border: '1px solid var(--border-subtle)', borderRadius: '8px', color: 'var(--text-primary)', outline: 'none' }} />
+              <input type="text" name="name" value={formData.name} onChange={handleChange} required placeholder="Name / Alias" style={{ width: '100%', padding: '12px 16px', background: 'var(--bg-deep)', border: '1px solid var(--border-subtle)', borderRadius: '8px', color: 'var(--text-primary)', outline: 'none' }} />
             </div>
 
             <div style={{ marginBottom: '20px' }}>
               <label style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-ghost)', marginBottom: '8px', textTransform: 'uppercase' }}>Return Address</label>
-              <input type="email" required placeholder="Email" style={{ width: '100%', padding: '12px 16px', background: 'var(--bg-deep)', border: '1px solid var(--border-subtle)', borderRadius: '8px', color: 'var(--text-primary)', outline: 'none' }} />
+              <input type="email" name="email" value={formData.email} onChange={handleChange} required placeholder="Email" style={{ width: '100%', padding: '12px 16px', background: 'var(--bg-deep)', border: '1px solid var(--border-subtle)', borderRadius: '8px', color: 'var(--text-primary)', outline: 'none' }} />
             </div>
 
             <div style={{ marginBottom: '24px' }}>
               <label style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--text-ghost)', marginBottom: '8px', textTransform: 'uppercase' }}>Payload</label>
-              <textarea required placeholder="Transmission data..." style={{ width: '100%', height: '120px', padding: '12px 16px', background: 'var(--bg-deep)', border: '1px solid var(--border-subtle)', borderRadius: '8px', color: 'var(--text-primary)', outline: 'none', resize: 'none' }} />
+              <textarea name="message" value={formData.message} onChange={handleChange} required placeholder="Transmission data..." style={{ width: '100%', height: '120px', padding: '12px 16px', background: 'var(--bg-deep)', border: '1px solid var(--border-subtle)', borderRadius: '8px', color: 'var(--text-primary)', outline: 'none', resize: 'none' }} />
             </div>
 
             <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center' }} disabled={formState !== 'idle'}>
-              {formState === 'idle' ? 'INITIATE TRANSFER →' : formState === 'sending' ? 'ENCRYPTING & SENDING...' : '✓ TRANSMISSION COMPLETE'}
+              {formState === 'idle' ? 'INITIATE TRANSFER →' : formState === 'sending' ? 'ENCRYPTING & SENDING...' : formState === 'sent' ? '✓ TRANSMISSION COMPLETE' : 'RETRY TRANSMISSION'}
             </button>
+            {formState === 'sent' && (
+              <p style={{ marginTop: '12px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--accent)' }}>
+                Message captured. Netlify will store the submission and forward it through your configured notifications.
+              </p>
+            )}
+            {formState === 'error' && (
+              <p style={{ marginTop: '12px', fontFamily: 'var(--font-mono)', fontSize: '11px', color: '#ff5f57' }}>
+                Transmission failed. Check Netlify form settings after deployment and try again.
+              </p>
+            )}
           </div>
         </form>
       </div>

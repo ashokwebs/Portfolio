@@ -46,12 +46,14 @@ export default function FloatingAI() {
   return (
     <>
       {/* Trigger Button */}
-      <div 
+      <button
+        type="button"
+        aria-label={isOpen ? 'Close NEXUS agent' : 'Open NEXUS agent'}
         onClick={() => setIsOpen(!isOpen)}
         style={{
           position: 'fixed',
           bottom: '30px',
-          right: '30px',
+          right: '16px',
           width: '50px',
           height: '50px',
           borderRadius: '50%',
@@ -79,16 +81,16 @@ export default function FloatingAI() {
             animation: 'pulse-dot 2s infinite'
           }} />
         )}
-      </div>
+      </button>
 
       {/* Chat Window */}
       {isOpen && (
         <div style={{
           position: 'fixed',
           bottom: '90px',
-          right: '30px',
-          width: '320px',
-          height: '450px',
+          right: '16px',
+          width: 'min(320px, calc(100vw - 32px))',
+          height: 'min(450px, calc(100vh - 120px))',
           background: 'rgba(8,8,16,0.95)',
           border: '1px solid var(--accent-dim)',
           borderRadius: '12px',
@@ -122,10 +124,10 @@ export default function FloatingAI() {
             display: 'flex',
             flexDirection: 'column',
             gap: '16px',
-            fontFamily: 'var(--font-sans)',
-            fontSize: '13px',
-            lineHeight: 1.5
-          }}>
+              fontFamily: 'var(--font-display)',
+              fontSize: '13px',
+              lineHeight: 1.5
+            }}>
             {messages.map((m, i) => (
               <div key={i} style={{
                 alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',

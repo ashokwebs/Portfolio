@@ -42,9 +42,9 @@ export default function SkillsPage() {
 
       <div className="reveal-item" style={{ 
         display: 'grid', 
-        gridTemplateColumns: '1fr 350px', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
         gap: '24px', 
-        height: '65vh',
+        height: 'auto',
         minHeight: '500px'
       }}>
         {/* Left: The Neural Map */}

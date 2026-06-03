@@ -19,7 +19,6 @@ export default function BootSequence({ onComplete }) {
   const [input, setInput] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const inputRef = useRef(null);
-  const hasStarted = useRef(false);
 
   useEffect(() => {
     // Skip if already booted this session

@@ -1,9 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import gsap from 'gsap';
 import { projects } from '../data/content';
 import { Tilt } from 'react-tilt';
 import ForceGraph3D from 'react-force-graph-3d';
 import { useTheme } from '../context/ThemeContext';
+
+const statusStyles = {
+  live: { label: 'LIVE', color: 'var(--accent)' },
+  wip: { label: 'WIP', color: 'var(--accent-secondary)' },
+  concept: { label: 'CONCEPT', color: 'var(--accent-tertiary)' },
+};
 
 const tiltOptions = {
   reverse: true,
@@ -21,7 +27,6 @@ export default function ProjectsPage() {
   const { isCrimson } = useTheme();
   const [filter, setFilter] = useState('All');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'matrix'
-  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   
   const containerRef = useRef(null);
   const gridRef = useRef(null);
@@ -47,7 +52,7 @@ export default function ProjectsPage() {
     }
   }, [filter, viewMode]);
 
-  useEffect(() => {
+  const graphData = useMemo(() => {
     // Generate Graph Data
     const nodes = [];
     const links = [];
@@ -67,7 +72,7 @@ export default function ProjectsPage() {
       });
     });
 
-    setGraphData({ nodes, links });
+    return { nodes, links };
   }, [isCrimson]);
 
   return (
@@ -170,6 +175,9 @@ export default function ProjectsPage() {
                 height: '100%', display: 'flex', flexDirection: 'column',
                 transformStyle: 'preserve-3d', padding: '32px'
               }}>
+                {project.icon && (
+                  <div style={{ transform: 'translateZ(24px)', fontSize: '24px', marginBottom: '16px' }}>{project.icon}</div>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', transform: 'translateZ(30px)' }}>
                   <h3 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>{project.title}</h3>
                   <span style={{ color: 'var(--accent)', fontFamily: 'var(--font-mono)', fontSize: '11px', whiteSpace: 'nowrap', marginLeft: '16px', background: 'var(--accent-dim)', padding: '4px 8px', borderRadius: '4px', textTransform: 'uppercase' }}>
@@ -193,16 +201,26 @@ export default function ProjectsPage() {
                     ))}
                   </div>
                   
-                  <div style={{ display: 'flex', gap: '16px' }}>
-                    {project.link !== '#' && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
+                    {project.link && (
                       <a href={project.link} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>[VIEW DEPLOYMENT]</span>
                       </a>
                     )}
-                    {project.github !== '#' && (
+                    {project.github && (
                       <a href={project.github} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span style={{ fontFamily: 'var(--font-mono)', fontSize: '12px' }}>[SOURCE CODE]</span>
                       </a>
+                    )}
+                    {!project.link && !project.github && (
+                      <span style={{
+                        fontFamily: 'var(--font-mono)',
+                        fontSize: '11px',
+                        color: statusStyles[project.status]?.color || 'var(--text-ghost)',
+                        letterSpacing: '0.08em',
+                      }}>
+                        [{statusStyles[project.status]?.label || 'SEALED'} BUILD DETAILS AVAILABLE ON REQUEST]
+                      </span>
                     )}
                   </div>
                 </div>

@@ -1,0 +1,10 @@
+NEXUS://SEED
+
+If this file made sense to you, you are already inside the intended audience.
+
+Breadcrumbs:
+1. Open the terminal route.
+2. Try a command that sounds like a diagnostic path, not a navigation command.
+3. The quietest note in this project is not in the UI.
+
+Fragment unlocked: GLASS-GARDEN

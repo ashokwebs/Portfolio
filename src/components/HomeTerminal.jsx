@@ -63,8 +63,16 @@ export default function HomeTerminal() {
       case 'contact':
         newHistory.push({ type: 'output', text: 'COMMUNICATION PROTOCOLS:' });
         newHistory.push({ type: 'output', text: `  > Email: ${personal.email}` });
-        newHistory.push({ type: 'output', text: `  > GitHub: @AshokPasala` });
-        newHistory.push({ type: 'output', text: `  > Location: ${personal.location}` });
+        newHistory.push({ type: 'output', text: `  > GitHub: github.com/ashokwebs` });
+        newHistory.push({ type: 'output', text: `  > Phone: ${personal.phone}` });
+        break;
+      case 'strings':
+        if (args.join(' ') === 'kernel.log') {
+          newHistory.push({ type: 'output', text: 'trace://artifact => /.well-known/nexus-seed.txt' });
+          newHistory.push({ type: 'output', text: 'If you are reading hidden strings, you are exactly the target audience.' });
+        } else {
+          newHistory.push({ type: 'error', text: `strings: cannot open ${args.join(' ') || 'input'}` });
+        }
         break;
       case 'date':
         newHistory.push({ type: 'output', text: new Date().toString() });

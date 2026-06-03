@@ -80,8 +80,12 @@ const MASTER_TASKS = [
   { command: 'ssh-keygen -t ed25519', hint: 'Generate a new Ed25519 cryptographic key pair.' },
   { command: 'crontab -r', hint: 'Remove the current users crontab file to stop scheduled malware.' },
   { command: 'awk -F\':\' \'{ print $1}\' /etc/passwd', hint: 'Parse the passwd file and print only the usernames.' },
-  { command: 'docker stop $(docker ps -q)', hint: 'Stop all running Docker containers simultaneously.' }
+  { command: 'docker stop $(docker ps -q)', hint: 'Stop all running Docker containers simultaneously.' },
+  { command: 'sudo purge parasite', hint: 'Last resort override. Elevate privileges and purge the resident parasite from kernel memory.' }
 ];
+
+const FINAL_TASK_COMMAND = 'sudo purge parasite';
+const PLAYABLE_TASKS = MASTER_TASKS.filter((task) => task.command !== FINAL_TASK_COMMAND);
 
 export default function CrimsonGame() {
   const { terminalGameState, endTerminalGame, injectAiDialogue } = useTheme();
@@ -96,9 +100,7 @@ export default function CrimsonGame() {
   const initializedRef = useRef(false);
 
   const getRandomTask = () => {
-    // Exclude 'sudo purge parasite' from random selection
-    const pool = MASTER_TASKS.filter(t => t.command !== 'sudo purge parasite');
-    return pool[Math.floor(Math.random() * pool.length)];
+    return PLAYABLE_TASKS[Math.floor(Math.random() * PLAYABLE_TASKS.length)];
   };
 
   // Initialize the Override
@@ -152,7 +154,7 @@ export default function CrimsonGame() {
       if (val.toLowerCase() === 'help') {
         playSound('type');
         newHistory.push({ type: 'system', text: 'AVAILABLE SYSTEM COMMANDS:' });
-        MASTER_TASKS.forEach(t => {
+        PLAYABLE_TASKS.forEach(t => {
           newHistory.push({ type: 'ai', text: `  - ${t.command}` });
         });
         newHistory.push({ type: 'system', text: 'Analyze the hint to find the correct command.' });
@@ -178,7 +180,7 @@ export default function CrimsonGame() {
           endTerminalGame(true);
         } else if (nextCorruption === 20) {
           // About to win - set final task
-          const finalTask = MASTER_TASKS.find(t => t.command === 'sudo purge parasite');
+          const finalTask = MASTER_TASKS.find(t => t.command === FINAL_TASK_COMMAND);
           setCurrentTask(finalTask);
           newHistory.push({ type: 'success', text: `Command accepted. Corruption dropping.` });
           newHistory.push({ type: 'ai', text: `MUTATED PARASITE EXPOSED. ${finalTask.hint}` });

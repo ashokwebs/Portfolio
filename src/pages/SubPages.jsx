@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { Tilt } from 'react-tilt';
-import { learning, cybersecurity, roadmap, interests, writing, services, monetization } from '../data/content';
+import { learning, cybersecurity, roadmap, interests, writing, services } from '../data/content';
 
 const tiltOptions = {
   reverse: true,

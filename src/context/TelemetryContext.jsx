@@ -1,18 +1,25 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const TelemetryContext = createContext(null);
 
 export const useTelemetry = () => useContext(TelemetryContext);
 
 export function TelemetryProvider({ children }) {
-  const [telemetry, setTelemetry] = useState(null);
-  const [hasScanned, setHasScanned] = useState(false);
+  const [telemetry, setTelemetry] = useState(() => {
+    if (typeof window === 'undefined') return null;
+
+    try {
+      const cachedTelemetry = sessionStorage.getItem('nexus_telemetry_cache');
+      return cachedTelemetry ? JSON.parse(cachedTelemetry) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [hasScanned, setHasScanned] = useState(() => Boolean(telemetry));
 
   useEffect(() => {
     // Only run this once per session
-    if (sessionStorage.getItem('nexus_telemetry_cache')) {
-      setTelemetry(JSON.parse(sessionStorage.getItem('nexus_telemetry_cache')));
-      setHasScanned(true);
+    if (telemetry) {
       return;
     }
 
@@ -39,7 +46,9 @@ export function TelemetryProvider({ children }) {
         try {
           const battery = await navigator.getBattery();
           batteryInfo = `${Math.round(battery.level * 100)}% ${battery.charging ? '(Charging)' : ''}`;
-        } catch(e) {}
+        } catch {
+          // Battery API is unavailable or blocked.
+        }
       }
 
       // 3. Performance Memory (if supported)
@@ -62,7 +71,9 @@ export function TelemetryProvider({ children }) {
             gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
           }
         }
-      } catch (e) {}
+      } catch {
+        // WebGL renderer details are intentionally unavailable in some browsers.
+      }
 
       // 6. Network Connection Info
       let connection = 'Unknown';
@@ -85,7 +96,9 @@ export function TelemetryProvider({ children }) {
             isp: data.org
           };
         }
-      } catch (e) {}
+      } catch {
+        // Geolocation enrichment is optional and should fail quietly.
+      }
 
       if (!mounted) return;
 
@@ -133,7 +146,7 @@ export function TelemetryProvider({ children }) {
     setTimeout(extractTelemetry, 1000);
 
     return () => { mounted = false; };
-  }, []);
+  }, [telemetry]);
 
   return (
     <TelemetryContext.Provider value={{ telemetry, hasScanned }}>

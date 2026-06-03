@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const cmdData = [
@@ -25,17 +25,21 @@ export default function CommandPalette({ isOpen, onClose }) {
   const inputRef = useRef(null);
   const navigate = useNavigate();
 
+  const execCmd = useCallback((item) => {
+    if (!item) return;
+    if (item.path) navigate(item.path);
+    else if (item.url) window.open(item.url, '_blank', 'noopener,noreferrer');
+    onClose();
+  }, [navigate, onClose]);
+
   const filtered = cmdData.filter(d =>
     !query || d.text.toLowerCase().includes(query.toLowerCase()) || d.sub.toLowerCase().includes(query.toLowerCase())
   );
 
   useEffect(() => {
-    if (isOpen) {
-      setQuery('');
-      setSelectedIdx(0);
-      setTimeout(() => inputRef.current?.focus(), 50);
-    }
-  }, [isOpen]);
+    const focusTimer = setTimeout(() => inputRef.current?.focus(), 50);
+    return () => clearTimeout(focusTimer);
+  }, []);
 
   useEffect(() => {
     function handleKey(e) {
@@ -50,14 +54,7 @@ export default function CommandPalette({ isOpen, onClose }) {
     }
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
-  }, [isOpen, filtered, selectedIdx]);
-
-  function execCmd(item) {
-    if (!item) return;
-    if (item.path) navigate(item.path);
-    else if (item.url) window.open(item.url, '_blank');
-    onClose();
-  }
+  }, [isOpen, filtered, selectedIdx, execCmd, onClose]);
 
   const groups = [...new Set(filtered.map(d => d.group))];
 
@@ -78,7 +75,7 @@ export default function CommandPalette({ isOpen, onClose }) {
           {groups.map(group => (
             <div key={group}>
               <div className="cmd-group-label">{group}</div>
-              {filtered.filter(d => d.group === group).map((item, i) => {
+              {filtered.filter(d => d.group === group).map((item) => {
                 const globalIdx = filtered.indexOf(item);
                 return (
                   <div

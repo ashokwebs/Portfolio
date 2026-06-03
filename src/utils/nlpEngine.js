@@ -1,4 +1,4 @@
-import { personal, projects, skills, services, roadmap, about, learning, cybersecurity, interests, writing } from '../data/content';
+import { personal, projects, skills, services, learning, cybersecurity, interests, writing } from '../data/content';
 
 /**
  * NEXUS COGNITIVE CORE v4.0

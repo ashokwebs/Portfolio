@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+const BUILD_ROTATION = ['Multi-Agent AI System', 'AI Workflow Dashboard', 'Knowledge Engine', 'Trading Algorithm', 'Security Framework'];
+
 const navItems = [
   { path: '/', icon: '⬡', label: 'Home', color: '#00ff88' },
   { path: '/about', icon: '◈', label: 'Identity', color: '#ff00ff' },
@@ -26,19 +28,21 @@ export function SideDock() {
 
   return (
     <nav className="side-dock">
-      <div className="dock-brand" onClick={() => navigate('/')} title="NEXUS://OS">
+      <button type="button" className="dock-brand" onClick={() => navigate('/')} title="NEXUS://OS" aria-label="Go to home">
         N
-      </div>
+      </button>
       <div className="dock-nav">
         {navItems.map((item, i) => {
           const isActive = location.pathname === item.path;
           return item.divider ? (
             <div className="dock-divider" key={`d-${i}`} style={{ background: 'rgba(255,255,255,0.05)', margin: '12px 0' }} />
           ) : (
-            <div
+            <button
+              type="button"
               key={item.path}
               className={`dock-item ${isActive ? 'active' : ''}`}
               onClick={() => navigate(item.path)}
+              aria-label={item.label}
               style={{
                 color: isActive ? '#fff' : item.color,
                 background: isActive ? item.color : 'rgba(255,255,255,0.02)',
@@ -71,15 +75,15 @@ export function SideDock() {
                   e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
                 }
               }}
-            >
-              <span style={{ 
-                filter: isActive ? 'drop-shadow(0 0 5px rgba(255,255,255,0.8))' : `drop-shadow(0 0 2px ${item.color}60)`,
-                textShadow: isActive ? 'none' : `0 0 8px ${item.color}80`
-              }}>
-                {item.icon}
-              </span>
-              <span className="dock-tooltip">{item.label}</span>
-            </div>
+              >
+                <span style={{ 
+                  filter: isActive ? 'drop-shadow(0 0 5px rgba(255,255,255,0.8))' : `drop-shadow(0 0 2px ${item.color}60)`,
+                  textShadow: isActive ? 'none' : `0 0 8px ${item.color}80`
+                }}>
+                  {item.icon}
+                </span>
+                <span className="dock-tooltip">{item.label}</span>
+            </button>
           )
         })}
       </div>
@@ -90,7 +94,6 @@ export function SideDock() {
 export function TopBar({ onOpenCmd }) {
   const [time, setTime] = useState('');
   const [currentBuild, setCurrentBuild] = useState(0);
-  const builds = ['Multi-Agent AI System', 'AI Workflow Dashboard', 'Knowledge Engine', 'Trading Algorithm', 'Security Framework'];
 
   useEffect(() => {
     const updateTime = () => {
@@ -101,7 +104,7 @@ export function TopBar({ onOpenCmd }) {
     const interval = setInterval(updateTime, 1000);
     
     const buildInterval = setInterval(() => {
-      setCurrentBuild(prev => (prev + 1) % builds.length);
+      setCurrentBuild(prev => (prev + 1) % BUILD_ROTATION.length);
     }, 4000);
 
     return () => { clearInterval(interval); clearInterval(buildInterval); };
@@ -118,12 +121,14 @@ export function TopBar({ onOpenCmd }) {
           SYSTEM ONLINE
         </div>
         <span style={{ color: 'var(--text-ghost)', fontSize: '10px' }}>
-          Currently building: <span style={{ color: 'var(--accent-secondary)' }}>{builds[currentBuild]}</span>
+          Currently building: <span style={{ color: 'var(--accent-secondary)' }}>{BUILD_ROTATION[currentBuild]}</span>
         </span>
       </div>
       <div className="topbar-right">
         <span>{time}</span>
-        <div 
+        <button
+          type="button"
+          aria-label="Open terminal command palette"
           className="topbar-cmd" 
           onClick={onOpenCmd}
           style={{
@@ -155,7 +160,7 @@ export function TopBar({ onOpenCmd }) {
             <kbd style={{ background: 'transparent', border: '1px solid rgba(0,255,136,0.3)', color: 'var(--accent)', padding: '2px 6px' }}>⌘</kbd>
             <kbd style={{ background: 'transparent', border: '1px solid rgba(0,255,136,0.3)', color: 'var(--accent)', padding: '2px 6px' }}>K</kbd>
           </div>
-        </div>
+        </button>
       </div>
     </div>
   );

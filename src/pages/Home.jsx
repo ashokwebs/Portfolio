@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { personal } from '../data/content';
 import { useTheme } from '../context/ThemeContext';
@@ -18,7 +18,6 @@ export default function HomePage() {
 
   const navigate = useNavigate();
   const [counters, setCounters] = useState({ domains: 0, projects: 0 });
-  const heroRef = useRef(null);
 
   useEffect(() => {
     // Animate counters
@@ -116,7 +115,7 @@ export default function HomePage() {
       {/* Stats */}
       <div className="reveal" style={{ animationDelay: '0.5s' }}>
         <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
           gap: '1px', background: 'var(--border-subtle)',
           border: '1px solid var(--border-subtle)',
           borderRadius: 'var(--radius)', overflow: 'hidden',
@@ -178,4 +177,3 @@ export default function HomePage() {
     </div>
   );
 }
-

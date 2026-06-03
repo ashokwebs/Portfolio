@@ -36,7 +36,7 @@ export default function TerminalPage() {
     const args = cmd.split(' ').filter(Boolean);
     const command = args[0].toLowerCase();
     
-    let output = [];
+    let output;
     
     switch (command) {
       case 'help':
@@ -90,8 +90,25 @@ export default function TerminalPage() {
             { type: 'out', text: 'Email: ashokashishms@gmail.com' },
             { type: 'out', text: 'GitHub: github.com/ashokwebs' }
           ];
+        } else if (args[1] === '.nexus-note') {
+          output = [
+            { type: 'out', text: '[DEVELOPER NOTE]' },
+            { type: 'out', text: 'If you found this, you already know the best interfaces reward inspection.' },
+            { type: 'out', text: 'CTF fragment: GLASS-GARDEN // Next breadcrumb lives in page source.' },
+          ];
         } else {
           output = [{ type: 'out', text: `cat: ${args[1] || ''}: No such file` }];
+        }
+        break;
+      case 'trace':
+        if (args[1] === '--override') {
+          output = [
+            { type: 'out', text: 'trace://override accepted' },
+            { type: 'out', text: 'Artifact located: /.well-known/nexus-seed.txt' },
+            { type: 'out', text: 'Secondary note: try `cat .nexus-note`' },
+          ];
+        } else {
+          output = [{ type: 'out', text: 'trace: missing override token. Hint: --override' }];
         }
         break;
       case 'status':

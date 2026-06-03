@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import gsap from 'gsap';
 import { useTheme } from '../context/ThemeContext';
 
 const MALICIOUS_PACKETS = [
@@ -111,7 +110,6 @@ export default function BreachPage() {
     const hitIndex = activePackets.findIndex(p => p.text === val);
     if (hitIndex !== -1) {
       // Destroy packet
-      const packet = activePackets[hitIndex];
       setActivePackets(prev => prev.filter((_, i) => i !== hitIndex));
       setScore(s => s + 5);
       setInput(''); // clear input

@@ -15,8 +15,6 @@ const HomePage = lazy(() => import('./pages/Home'));
 const IdentityPage = lazy(() => import('./pages/Identity'));
 const ProjectsPage = lazy(() => import('./pages/Projects'));
 const SkillsPage = lazy(() => import('./pages/Skills'));
-const { SystemsLab, CyberSecurity, Roadmap, Web3Trading, Research, Writing, Services } = await import('./pages/SubPages'); // using await import to unpack named exports for lazy loading is tricky, let's create a proxy component for each.
-// Actually, it's cleaner to lazy load them like this:
 const SystemsLabPage = lazy(() => import('./pages/SubPages').then(module => ({ default: module.SystemsLab })));
 const CyberSecurityPage = lazy(() => import('./pages/SubPages').then(module => ({ default: module.CyberSecurity })));
 const Web3TradingPage = lazy(() => import('./pages/SubPages').then(module => ({ default: module.Web3Trading })));
@@ -85,7 +83,6 @@ const Noise = () => <div className="noise-overlay" />;
 function Layout({ children, onOpenCmd }) {
   const location = useLocation();
   const isTerminal = location.pathname === '/terminal';
-  const isHome = location.pathname === '/';
 
   if (isTerminal) return children;
 
@@ -106,7 +103,7 @@ function Layout({ children, onOpenCmd }) {
 
 function AppContent() {
   const [cmdOpen, setCmdOpen] = useState(false);
-  const [booted, setBooted] = useState(false);
+  const [booted, setBooted] = useState(() => sessionStorage.getItem('nexus-booted') === 'true');
   const [glitchMode, setGlitchMode] = useState(false);
   
   useSoundEffects();
@@ -135,14 +132,11 @@ function AppContent() {
   }, []);
 
   useEffect(() => {
-    if (sessionStorage.getItem('nexus-booted')) {
-      setBooted(true);
-    }
-    
     // EASTER EGG: Fake Developer Logs
     console.log("%c[ NEXUS://OS ] KERNEL INITIALIZED", "color: #00ff88; font-size: 16px; font-weight: bold;");
     console.log("%cCurious, aren't you? If you are reading this, you are a builder.", "color: #8b7cf7; font-size: 12px;");
     console.log("%cTry typing 'classified' into the Terminal.", "color: var(--text-ghost); font-size: 10px; font-style: italic;");
+    console.debug('[ trace://artifact ] /.well-known/nexus-seed.txt');
   }, []);
 
   return (
@@ -158,7 +152,7 @@ function AppContent() {
       
       {booted && (
         <>
-          <CommandPalette isOpen={cmdOpen} onClose={() => setCmdOpen(false)} />
+          {cmdOpen && <CommandPalette isOpen={cmdOpen} onClose={() => setCmdOpen(false)} />}
           <Layout onOpenCmd={() => setCmdOpen(true)}>
             <Routes>
               <Route path="/" element={<HomePage />} />

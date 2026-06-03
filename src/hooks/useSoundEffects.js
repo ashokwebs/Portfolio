@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 // A utility to generate futuristic UI sounds using the Web Audio API
 class AudioEngine {

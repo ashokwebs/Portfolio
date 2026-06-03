@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { personal, about } from '../data/content';
+import { about } from '../data/content';
 
 export default function IdentityPage() {
   const containerRef = useRef(null);
