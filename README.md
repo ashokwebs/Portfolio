@@ -1,127 +1,103 @@
 # NEXUS://OS
 
-An operating-system-inspired developer portfolio for Ashok Pasala.
+Interactive developer portfolio for **Ashok Pasala**, built as a cinematic operating-system-style web experience.
 
-This is not a static landing page pretending to be a portfolio. It behaves more like a small interactive environment: terminal navigation, hidden routes, cinematic boot flow, diagnostics, a command palette, ambient AI chat, and a few quiet breadcrumbs for developers who inspect a little deeper.
+[GitHub](https://github.com/ashokwebs) · [LinkedIn](https://www.linkedin.com/in/ashok-raj-p-1b8539317/) · [Email](mailto:ashokashishms@gmail.com)
 
-## What It Is
+## Overview
 
-`NEXUS://OS` is a React + Vite portfolio built to present:
+`NEXUS://OS` is a portfolio application designed to present technical identity, projects, research interests, and services through an interface that feels closer to a live system than a traditional personal website.
 
-- identity and positioning
-- project archive
-- skills and technical clusters
-- systems/AI lab work
-- cybersecurity and research interests
-- writing, roadmap, and services
-- contact flow for real Netlify form submissions
+The project combines strong visual direction with interactive navigation, hidden states, terminal-driven discovery, and layered UI behavior while still functioning as a practical portfolio and contact surface.
 
-It is designed to feel memorable without losing credibility.
+## Highlights
 
-## Core Experience
+- Operating-system-inspired landing experience
+- Cinematic boot sequence before entering the main interface
+- Persistent navigation dock and top system bar
+- Command palette for fast route navigation
+- Interactive terminal route with custom commands
+- Animated galaxy background with scanline and noise effects
+- Floating AI assistant with contextual dialogue
+- Classified route and hidden discovery paths
+- Visitor diagnostics page powered by client-side telemetry
+- Skills visualization and project archive views
+- Systems, AI, cybersecurity, research, writing, services, and roadmap sections
+- Firewall and breach-style interactive mini-games
+- Hidden developer breadcrumbs and local CTF-style notes for curious builders
+- Contact form integrated into the application experience
 
-- OS-style landing page with boot sequence
-- command palette navigation
-- terminal page with hidden commands
-- animated galaxy background and scanline/noise layers
-- floating AI assistant with themed dialogue changes
-- classified route and easter eggs
-- firewall/breach mini-games
-- visitor diagnostics page
-- Netlify-ready SPA routing and contact form handling
+## Feature Breakdown
 
-## Stack
+### Interface System
+
+- custom visual identity built around the `NEXUS://OS` theme
+- layered ambient effects for depth and atmosphere
+- responsive layout across desktop and mobile screens
+- page transitions, motion cues, and interactive feedback states
+
+### Navigation
+
+- side dock for section-based browsing
+- command palette for fast access
+- terminal route for command-driven navigation
+- hidden routes and unlock-style discovery elements
+
+### Content Areas
+
+- home / identity presentation
+- project archive with category filtering
+- skills ecosystem and technical clusters
+- systems and AI lab section
+- cybersecurity section
+- web3 and finance interests
+- research and learning section
+- writing archive
+- services overview
+- roadmap and objectives
+- direct contact section
+
+### Interactive Systems
+
+- AI assistant with themed response behavior
+- diagnostics page that reads client environment data
+- classified page with access-gated reveal
+- breach and terminal-inspired game interactions
+- developer-only clues placed in source and terminal flows
+
+## Tech Stack
 
 - React 19
 - Vite 8
 - React Router
 - GSAP
 - Three.js
-- React Three Fiber / Drei
+- React Three Fiber
+- Drei
 - React Force Graph 3D
 - ESLint
-- Netlify
-
-## Local Development
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Start the dev server:
-
-```bash
-npm run dev
-```
-
-Run lint:
-
-```bash
-npm run lint
-```
-
-Create a production build:
-
-```bash
-npm run build
-```
-
-Preview the production build:
-
-```bash
-npm run preview
-```
 
 ## Project Structure
 
 ```text
 src/
-  components/   UI systems, terminal widgets, effects, games
-  context/      theme and telemetry state
-  data/         portfolio content and project metadata
+  components/   interface systems, widgets, effects, games
+  context/      theme and telemetry providers
+  data/         portfolio content and metadata
   hooks/        shared interaction hooks
   pages/        route-level screens
-  utils/        local AI response logic
+  utils/        local AI/response logic
 public/
-  _redirects    SPA fallback for Netlify
-  .well-known/  a quiet place for curious developers
+  _redirects    SPA routing support
+  .well-known/  hidden developer artifacts
 ```
 
-## Netlify Deployment
+## Notable Design Goals
 
-This repo is set up for Netlify deployment.
-
-- Build command: `npm run build`
-- Publish directory: `dist`
-- SPA fallback: `public/_redirects`
-- Netlify config: `netlify.toml`
-- Contact form: wired for Netlify Forms
-
-### Deploy Steps
-
-1. Push the repo to GitHub.
-2. Import the repo into Netlify.
-3. Keep the default build command and publish directory from `netlify.toml`.
-4. Deploy.
-5. Open the Netlify dashboard and verify form submissions under `Forms`.
-6. If you later add a custom domain, update social metadata URLs as needed.
-
-## Notes For Future Updates
-
-- Add real deployment/source links to more project cards when available.
-- Replace `/canvas.png` with a dedicated Open Graph image for sharper social previews.
-- If the Netlify site URL changes, update metadata to match the final domain.
-- If you expand the hidden developer trail, keep it subtle. The best clues reward inspection.
-
-## Why It Works
-
-There are many portfolio sites that are clean.
-
-Very few are clean, technically ambitious, memorable, and curious enough to make another developer open DevTools.
-
-That is the lane this project is trying to own.
+- make the portfolio memorable without sacrificing clarity
+- present technical breadth in a more original format
+- reward exploration through interaction and hidden details
+- keep the experience cinematic while still usable as a professional portfolio
 
 ## Contact
 
