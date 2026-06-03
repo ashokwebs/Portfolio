@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { Tilt } from 'react-tilt';
 import { learning, cybersecurity, roadmap, interests, writing, services } from '../data/content';
+import TiltCard from '../components/TiltCard';
 
 const tiltOptions = {
   reverse: true,
@@ -39,7 +39,7 @@ export function SystemsLab() {
 
       <div className="grid-2 reveal-item">
         {/* Module 1: Multi-Agent Orchestration */}
-        <Tilt options={tiltOptions}>
+        <TiltCard options={tiltOptions}>
           <div style={{
           background: 'rgba(10, 12, 18, 0.8)',
           border: '1px solid rgba(0, 255, 136, 0.15)',
@@ -83,10 +83,10 @@ export function SystemsLab() {
             </div>
           </div>
         </div>
-        </Tilt>
+        </TiltCard>
 
         {/* Module 2: Knowledge Engine RAG */}
-        <Tilt options={tiltOptions}>
+        <TiltCard options={tiltOptions}>
           <div style={{
           background: 'rgba(10, 12, 18, 0.8)',
           border: '1px solid rgba(139, 124, 247, 0.15)',
@@ -142,7 +142,7 @@ export function SystemsLab() {
             </div>
           </div>
         </div>
-        </Tilt>
+        </TiltCard>
       </div>
     </div>
   );

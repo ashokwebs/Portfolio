@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import gsap from 'gsap';
 import { projects } from '../data/content';
-import { Tilt } from 'react-tilt';
 import ForceGraph3D from 'react-force-graph-3d';
 import { useTheme } from '../context/ThemeContext';
+import TiltCard from '../components/TiltCard';
 
 const statusStyles = {
   live: { label: 'LIVE', color: 'var(--accent)' },
@@ -170,7 +170,7 @@ export default function ProjectsPage() {
       ) : (
         <div className="grid-2 reveal-item" ref={gridRef}>
           {filtered.map((project, i) => (
-            <Tilt key={i} options={tiltOptions}>
+            <TiltCard key={i} options={tiltOptions}>
               <div className="card" style={{ 
                 height: '100%', display: 'flex', flexDirection: 'column',
                 transformStyle: 'preserve-3d', padding: '32px'
@@ -225,7 +225,7 @@ export default function ProjectsPage() {
                   </div>
                 </div>
               </div>
-            </Tilt>
+            </TiltCard>
           ))}
         </div>
       )}
